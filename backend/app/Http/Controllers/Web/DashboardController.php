@@ -51,6 +51,10 @@ class DashboardController extends Controller
             $partners->whereKey($user->partner_id);
             $assignments->whereHas('members', fn (Builder $member) => $member->where('partner_id', $user->partner_id));
             $activities->whereHas('assignments.members', fn (Builder $member) => $member->where('partner_id', $user->partner_id));
+        } elseif ($user->hasRole(['PEJABAT_PERSETUJU', 'PENANDATANGAN', 'AUDITOR'])) {
+            $partners->whereRaw('1 = 0');
+            $activities->whereRaw('1 = 0');
+            $assignments->whereRaw('1 = 0');
         } else {
             abort(403);
         }

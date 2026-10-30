@@ -27,7 +27,7 @@ Laravel dipilih karena PHP 8.2, Composer 2.9, PDO MySQL, dan MariaDB XAMPP terse
 - Migrations saat ini: user/unit/RBAC, mitra/verifikasi, kegiatan/target, penugasan/anggota/rincian target, audit log, work report/revision/evidence, template/document versions, signature evidence, dan arsip.
 - API v2: auth, dashboard administrasi, mitra, kegiatan, penugasan, laporan/review pekerjaan, template privat, SPK/BAST draft/review/signature/final/archive.
 - Android: login/session Sanctum, mitra, kegiatan, penugasan, dashboard administrasi, serta daftar dan pemeriksaan hasil pekerjaan.
-- Web: login, dashboard, mitra, kegiatan, penugasan, dan kelola/review template. Dokumen lengkap belum memiliki UI web end-to-end.
+- Web: login, dashboard, mitra, kegiatan, penugasan, template, import Excel, demo walkthrough, dan konsol dokumen SPK/BAST untuk draft, preview, pemeriksaan, persetujuan, bukti tanda tangan manual, finalisasi, dan unduhan arsip. Alur layar tetap memerlukan UAT dengan template yang disahkan.
 - Import Excel: workbook kosong dengan sheet Mitra, Kegiatan, Penugasan, dan Laporan; validasi atomik per jenis data dengan RBAC serta prasyarat bisnis yang sama seperti API.
 - Belum tersedia: provider TTE tersertifikasi, WhatsApp resmi, GPS, antivirus otomatis, backup/restore tervalidasi, security review, UAT, dan deployment.
 

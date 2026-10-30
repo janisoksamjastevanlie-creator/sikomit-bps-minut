@@ -37,7 +37,7 @@ class DocumentController extends Controller
             'limit' => ['nullable', 'integer', 'min:1', 'max:100'],
             'offset' => ['nullable', 'integer', 'min:0', 'max:1000000'],
         ]);
-        $query = $this->visibleDocuments($request->user())->with(['activity', 'assignmentMember.partner', 'parent']);
+        $query = $this->visibleDocuments($request->user())->with(['activity', 'assignmentMember.partner', 'parent', 'signatures.signer']);
         if (!empty($filters['type'])) $query->where('document_type', $filters['type']);
         if (!empty($filters['status'])) $query->where('status', $filters['status']);
         $limit = (int) ($filters['limit'] ?? 50);
@@ -56,7 +56,7 @@ class DocumentController extends Controller
     public function show(Request $request, Document $document): JsonResponse
     {
         abort_unless($this->visibleDocuments($request->user())->whereKey($document->id)->exists(), 403, 'Dokumen di luar lingkup akun.');
-        return response()->json($this->resource($document->load(['activity', 'assignmentMember.partner', 'parent', 'templateVersion'])));
+        return response()->json($this->resource($document->load(['activity', 'assignmentMember.partner', 'parent', 'templateVersion', 'signatures.signer'])));
     }
 
     public function createSpkDraft(Request $request): JsonResponse
@@ -882,6 +882,19 @@ class DocumentController extends Controller
             'status' => $document->status,
             'version' => $document->current_version,
             'templateApproved' => $document->templateVersion?->status === 'APPROVED',
+            'templateFields' => $document->templateVersion?->placeholder_fields ?? [],
+            'requiredSignatures' => $document->templateVersion?->required_signatures ?? [],
+            'signatures' => $document->relationLoaded('signatures')
+                ? $document->signatures->map(fn (DocumentSignature $signature) => [
+                    'id' => (string) $signature->id,
+                    'capacity' => $signature->signer_capacity,
+                    'signerName' => $signature->signer?->name ?? '',
+                    'status' => $signature->validation_status,
+                    'method' => $signature->signature_method,
+                    'signedAt' => $signature->signed_at?->getTimestampMs(),
+                    'validatedAt' => $signature->validated_at?->getTimestampMs(),
+                ])->values()
+                : [],
             'snapshot' => $document->content_snapshot ?? [],
             'demo' => (bool) $document->is_demo,
             'createdAt' => $document->created_at?->getTimestampMs() ?? 0,

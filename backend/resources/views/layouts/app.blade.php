@@ -29,6 +29,10 @@
                     <a class="nav-item {{ request()->routeIs('assignments.*') ? 'active' : '' }}" href="{{ route('assignments.index') }}"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12 5 5L20 6"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10"/></svg></span>Penugasan</a>
                 @endif
             @endif
+            @if (auth()->user()->hasRole(['ADMIN_BPS','PJK','OPERATOR','PEMERIKSA','PETUGAS_MITRA','PEJABAT_PERSETUJU','PENANDATANGAN','AUDITOR']))
+                <div class="sidebar-section nav-section-label">DOKUMEN</div>
+                <a class="nav-item {{ request()->routeIs('documents.*') ? 'active' : '' }}" href="{{ route('documents.index') }}"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 20V5a1.5 1.5 0 0 1 2-1.5Z"/><path d="M14 4v4h4M8 13h8M8 17h5"/></svg></span>SPK & BAST</a>
+            @endif
             @if (auth()->user()->hasRole(['ADMIN_BPS','ADMIN_MITRA','OPERATOR','PJK','PETUGAS_MITRA']))
                 <div class="sidebar-section nav-section-label">PERANGKAT</div>
                 @if (auth()->user()->hasRole(['ADMIN_BPS','OPERATOR']))

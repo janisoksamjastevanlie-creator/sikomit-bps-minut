@@ -15,6 +15,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/password/change', [AuthController::class, 'updatePassword'])->name('password.update');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::middleware('role:ADMIN_BPS')->get('/demo-alur', DemoController::class)->name('demo.index');
+    Route::middleware('role:ADMIN_BPS,PJK,OPERATOR,PEMERIKSA,PETUGAS_MITRA,PEJABAT_PERSETUJU,PENANDATANGAN,AUDITOR')->get('/dokumen', fn () => view('admin.documents', [
+        'combinedModeEnabled' => config('sikomit.documents.combined_mode_enabled', false),
+    ]))->name('documents.index');
 
     Route::middleware('role:ADMIN_BPS,ADMIN_MITRA,OPERATOR,PEMERIKSA,PETUGAS_MITRA')->get('/mitra', fn () => view('admin.partners'))->name('partners.index');
     Route::middleware('role:ADMIN_BPS,PJK,OPERATOR,PETUGAS_MITRA')->get('/kegiatan', fn () => view('admin.activities'))->name('activities.index');

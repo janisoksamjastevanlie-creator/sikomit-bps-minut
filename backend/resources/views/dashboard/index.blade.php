@@ -20,6 +20,7 @@
             <div class="dashboard-actions">
                 @if (auth()->user()->hasRole(['ADMIN_BPS','ADMIN_MITRA','OPERATOR','PEMERIKSA','PETUGAS_MITRA']))<a href="{{ route('partners.index') }}">Data Mitra <span>→</span></a>@endif
                 @if (auth()->user()->hasRole(['ADMIN_BPS','PJK','OPERATOR','PETUGAS_MITRA']))<a href="{{ route('activities.index') }}">Kegiatan <span>→</span></a><a href="{{ route('assignments.index') }}">Penugasan <span>→</span></a>@endif
+                @if (auth()->user()->hasRole(['ADMIN_BPS','PJK','OPERATOR','PEMERIKSA','PETUGAS_MITRA','PEJABAT_PERSETUJU','PENANDATANGAN','AUDITOR']))<a href="{{ route('documents.index') }}">Dokumen SPK & BAST <span>→</span></a>@endif
             </div>
         </div>
         <div class="banner-emblem" aria-hidden="true"><img src="{{ asset('images/bps-logo.svg') }}" alt=""></div>

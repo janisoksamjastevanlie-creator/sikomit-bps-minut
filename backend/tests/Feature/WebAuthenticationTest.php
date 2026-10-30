@@ -68,4 +68,34 @@ class WebAuthenticationTest extends TestCase
             'Referer' => 'http://localhost/mitra',
         ])->assertOk()->assertJsonStructure(['items', 'total', 'limit', 'offset']);
     }
+
+    public function test_authorized_user_can_open_document_console(): void
+    {
+        $user = User::factory()->create([
+            'username' => 'webdocadmin',
+            'password' => Hash::make('SecureWebPass123!'),
+            'is_active' => true,
+        ]);
+        $user->roles()->attach(Role::where('code', 'ADMIN_BPS')->firstOrFail());
+        $this->post('/login', ['username' => 'webdocadmin', 'password' => 'SecureWebPass123!'])->assertRedirect('/dashboard');
+
+        $this->get('/dokumen')->assertOk()
+            ->assertSee('SPK & BAST')
+            ->assertSee('Buat SPK')
+            ->assertSee('template DOCX placeholder yang sudah disahkan');
+    }
+
+    public function test_signer_can_login_and_open_scoped_document_console(): void
+    {
+        $user = User::factory()->create([
+            'username' => 'websigner',
+            'password' => Hash::make('SecureWebPass123!'),
+            'is_active' => true,
+        ]);
+        $user->roles()->attach(Role::where('code', 'PENANDATANGAN')->firstOrFail());
+        $this->post('/login', ['username' => 'websigner', 'password' => 'SecureWebPass123!'])->assertRedirect('/dashboard');
+
+        $this->get('/dashboard')->assertOk()->assertSee('Dokumen SPK & BAST', false);
+        $this->get('/dokumen')->assertOk()->assertSee('SPK & BAST');
+    }
 }
